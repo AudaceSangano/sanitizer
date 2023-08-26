@@ -15,34 +15,50 @@
             <!-- Card Body -->
             <div class="card-body">
                 <div class="chart-area">
-                    <form class="user">
+                    @error('user_error')
+                        <div class="alert alert-danger text-primary font-18 text-center">{{ $message }}</div>
+                    @enderror
+                    <form class="user" action="{{route('collector.create')}}" method="POST">
+                        @csrf
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
-                                <input type="text" class="form-control form-control-user" id="exampleFirstName"
+                                <input type="text" class="form-control form-control-user" name="fname" id="exampleFirstName"
                                     placeholder="First Name">
+                                    @error('fname')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                             </div>
                             <div class="col-sm-6">
-                                <input type="text" class="form-control form-control-user" id="exampleLastName"
+                                <input type="text" class="form-control form-control-user" name="lname" id="exampleLastName"
                                     placeholder="Last Name">
+                                    @error('lname')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                             </div>
                         </div>
                         <div class="form-group">
-                            <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                            <input type="email" class="form-control form-control-user" name="email" id="exampleInputEmail"
                                 placeholder="Email Address">
+                                @error('email')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
                                 <input type="password" class="form-control form-control-user"
-                                    id="exampleInputPassword" placeholder="Password">
+                                    id="exampleInputPassword" name="password" placeholder="Password">
+                                    @error('password')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                             </div>
                             <div class="col-sm-6">
-                                <input type="password" class="form-control form-control-user"
+                                <input type="password" name="password_confirmation" class="form-control form-control-user"
                                     id="exampleRepeatPassword" placeholder="Repeat Password">
                             </div>
                         </div>
-                        <a href="login.html" class="btn btn-primary btn-user btn-block">
+                        <button type="submit" class="btn btn-primary btn-user btn-block">
                             Register Account
-                        </a>
+                        </button>
                     </form>
                 </div>
             </div>

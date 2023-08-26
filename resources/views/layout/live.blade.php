@@ -19,20 +19,6 @@
             <!-- Card Header - Dropdown -->
             <div class="card-header bg-warning py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">DRY Waste Status</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Change Status:</div>
-                        <a class="dropdown-item" id="change-image-full" href="#">Full Tank</a>
-                        <a class="dropdown-item" id="change-image-medium" href="#">Medium Tank</a>
-                        <a class="dropdown-item" id="change-image-low" href="#">Low Tank</a>
-                        <a class="dropdown-item" id="change-image-empty" href="#">Empty Tank</a>
-                    </div>
-                </div>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -46,20 +32,6 @@
             <!-- Card Header - Dropdown -->
             <div class="card-header bg-success py-3 d-flex flex-row align-items-center justify-content-between">
                 <h6 class="m-0 font-weight-bold text-primary">WET Waste Status</h6>
-                <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                        aria-labelledby="dropdownMenuLink">
-                        <div class="dropdown-header">Change Status:</div>
-                        <a class="dropdown-item" id="change-image-full-1" href="#">Full Tank</a>
-                        <a class="dropdown-item" id="change-image-medium-1" href="#">Medium Tank</a>
-                        <a class="dropdown-item" id="change-image-low-1" href="#">Low Tank</a>
-                        <a class="dropdown-item" id="change-image-empty-1" href="#">Empty Tank</a>
-                    </div>
-                </div>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -73,47 +45,66 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function() {
-    $("#change-image-full").click(function() {
-      $("#tank-image").attr("src", "{{asset('assets/tank/WaterTankRed.png')}}");
-      $("#dryMessage").text("Full Waste");
-    });
+    $(document).ready(function() {
+      function updateStatus() {
+        $.ajax({
+          url: "/getDbStatusDry", // Replace this with the actual endpoint
+          method: "GET",
+          dataType: "json",
+          success: function(response) {
+            // Assuming response.status contains the status value from the database
+            if (response.status === "full") {
+              $("#tank-image").attr("src", "{{asset('assets/tank/WaterTankRed.png')}}");
+              $("#dryMessage").text("Full Waste");
+            } else if(response.status === "medium"){
+              $("#tank-image").attr("src", "{{asset('assets/tank/WaterTank.png')}}");
+              $("#dryMessage").text("Medium Waste");
+            } else if(response.status === "low"){
+              $("#tank-image").attr("src", "{{asset('assets/tank/WaterTankYellow.png')}}");
+              $("#dryMessage").text("Low Waste");
+            } else{
+              $("#tank-image").attr("src", "{{asset('assets/tank/WaterTankEmpty.png')}}");
+              $("#dryMessage").text("Empty Waste");
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error("Error fetching status:", error);
+          }
+        });
+      }
 
-    $("#change-image-medium").click(function() {
-      $("#tank-image").attr("src", "{{asset('assets/tank/WaterTank.png')}}");
-      $("#dryMessage").text("Medium Waste");
-    });
+      function updateStatus_1() {
+        $.ajax({
+          url: "/getDbStatusWet", // Replace this with the actual endpoint
+          method: "GET",
+          dataType: "json",
+          success: function(response) {
+            // Assuming response.status contains the status value from the database
+            if (response.status === "full") {
+              $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTankRed.png')}}");
+              $("#wetMessage").text("Full Waste");
+            } else if(response.status === "medium"){
+              $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTank.png')}}");
+              $("#wetMessage").text("Medium Waste");
+            } else if(response.status === "low"){
+              $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTankYellow.png')}}");
+              $("#wetMessage").text("Low Waste");
+            } else{
+              $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTankEmpty.png')}}");
+              $("#wetMessage").text("Empty Waste");
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error("Error fetching status:", error);
+          }
+        });
+      }
 
-    $("#change-image-low").click(function() {
-    $("#tank-image").attr("src", "{{asset('assets/tank/WaterTankYellow.png')}}");
-      $("#dryMessage").text("Low Level Waste");
-    });
+      updateStatus();
+      updateStatus_1();
 
-    $("#change-image-empty").click(function() {
-    $("#tank-image").attr("src", "{{asset('assets/tank/WaterTankEmpty.png')}}");
-      $("#dryMessage").text("Empty Waste");
+      setInterval(updateStatus, 2000);
+      setInterval(updateStatus_1, 2000);
     });
-
-
-    $("#change-image-full-1").click(function() {
-      $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTankRed.png')}}");
-      $("#wetMessage").text("Full Waste");
-    });
-
-    $("#change-image-medium-1").click(function() {
-      $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTank.png')}}");
-      $("#wetMessage").text("Medium Waste");
-    });
-
-    $("#change-image-low-1").click(function() {
-    $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTankYellow.png')}}");
-      $("#wetMessage").text("Low Level Waste");
-    });
-
-    $("#change-image-empty-1").click(function() {
-    $("#tank-image-1").attr("src", "{{asset('assets/tank/WaterTankEmpty.png')}}");
-      $("#wetMessage").text("Empty Level Waste");
-    });
-  });
 </script>
 @endsection
