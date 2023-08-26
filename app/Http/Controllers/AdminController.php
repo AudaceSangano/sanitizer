@@ -57,4 +57,34 @@ class AdminController extends Controller
 
         return response()->json(['status' => $status]);
     }
+
+    public function dryUpdate($status)
+    {
+        $results = DB::table('dust_status')->where('st_category', '0')->update(
+            [
+                'st_status' => $status
+            ]
+        );
+
+        if ($results) {
+            return response()->json(['status' => 'Successfull'], 200);
+        }else {
+            return response()->json(['status' => 'Fail'], 500);
+        }
+    }
+
+    public function wetUpdate($status)
+    {
+        $results = DB::table('dust_status')->where('st_category', '1')->update(
+            [
+                'st_status' => $status
+            ]
+        );
+
+        if ($results) {
+            return response()->json(['status' => 'Successfull'], 200);
+        }else {
+            return response()->json(['status' => 'Fail'], 500);
+        }
+    }
 }

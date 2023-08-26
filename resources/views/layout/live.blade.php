@@ -103,8 +103,8 @@
       updateStatus();
       updateStatus_1();
 
-      setInterval(updateStatus, 2000);
-      setInterval(updateStatus_1, 2000);
+      setInterval(updateStatus, 200);
+      setInterval(updateStatus_1, 200);
     });
 </script>
 @endsection
