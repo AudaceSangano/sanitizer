@@ -1,3 +1,11 @@
+<?php
+use Illuminate\Support\Facades\Route;
+
+$route = Route::current();
+
+// Get the name of the current route
+$routeName = $route->getName();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -65,17 +73,32 @@
                 </a>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
+                        @if (Auth::user()->role_id=='1')
                         <a class="collapse-item" href="/register/user">New Collector</a>
+                        @endif
                         <a class="collapse-item" href="/list/user">Collectors List</a>
                     </div>
                 </div>
             </li>
 
-            <!-- Nav Item - Utilities Collapse Menu -->
+            <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
-                <a class="nav-link" href="/live">
-                    <i class="fas fa-fw fa-wrench"></i>
-                    <span>View Live Status</span></a>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo1"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
+                      </svg>
+                    <span>Dustbin Management</span>
+                </a>
+                <div id="collapseTwo1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        @if (Auth::user()->role_id=='1')
+                        <a class="collapse-item" href="{{route('new.dust')}}">New Dustbin</a>
+                        @endif
+                        <a class="collapse-item" href="/dustbin/list">Dustinbin List</a>
+                    </div>
+                </div>
             </li>
 
             <!-- Divider -->
@@ -88,16 +111,9 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{{route('dust.report')}}">
                     <i class="fas fa-fw fa-chart-area"></i>
                     <span>Dustbin Report</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>User Report</span></a>
             </li>
 
             <!-- Divider -->
@@ -134,7 +150,7 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{Auth::user()->name}}</span>
                                 <img class="img-profile rounded-circle"
                                     src="{{asset('assets/img/undraw_profile.svg')}}">
                             </a>
@@ -229,8 +245,132 @@
     <script src="{{asset('/assets/vendor/chart.js/Chart.min.js')}}"></script>
 
     <!-- Page level custom scripts -->
-    <script src="{{asset('/assets/js/demo/chart-area-demo.js')}}"></script>
+    {{-- <script src="{{asset('/assets/js/demo/chart-area-demo.js')}}"></script> --}}
     <script src="{{asset('/assets/js/demo/chart-pie-demo.js')}}"></script>
+ @if ($routeName=='dashboard')
+    <script>
+        Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+        Chart.defaults.global.defaultFontColor = '#858796';
+
+        function number_format(number, decimals, dec_point, thousands_sep) {
+        // *     example: number_format(1234.56, 2, ',', ' ');
+        // *     return: '1 234,56'
+        number = (number + '').replace(',', '').replace(' ', '');
+        var n = !isFinite(+number) ? 0 : +number,
+            prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+            sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+            dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+            s = '',
+            toFixedFix = function(n, prec) {
+            var k = Math.pow(10, prec);
+            return '' + Math.round(n * k) / k;
+            };
+        // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+        s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+        if (s[0].length > 3) {
+            s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+        }
+        if ((s[1] || '').length < prec) {
+            s[1] = s[1] || '';
+            s[1] += new Array(prec - s[1].length + 1).join('0');
+        }
+        return s.join(dec);
+        }
+
+        var ctx = document.getElementById("myAreaChart");
+        var myLineChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Suturday", "Sunday"],
+            datasets: [{
+            label: "Earnings",
+            lineTension: 0.3,
+            backgroundColor: "rgba(78, 115, 223, 0.05)",
+            borderColor: "rgba(78, 115, 223, 1)",
+            pointRadius: 3,
+            pointBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointBorderColor: "rgba(78, 115, 223, 1)",
+            pointHoverRadius: 3,
+            pointHoverBackgroundColor: "rgba(78, 115, 223, 1)",
+            pointHoverBorderColor: "rgba(78, 115, 223, 1)",
+            pointHitRadius: 10,
+            pointBorderWidth: 2,
+            data: [<?=$days['Monday']?>, <?=$days['Tuesday']?>, <?=$days['Wednesday']?>, <?=$days['Thursday']?>, <?=$days['Friday']?>, <?=$days['Saturday']?>, <?=$days['Sunday']?>],
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            layout: {
+            padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
+            }
+            },
+            scales: {
+            xAxes: [{
+                time: {
+                unit: 'date'
+                },
+                gridLines: {
+                display: false,
+                drawBorder: false
+                },
+                ticks: {
+                maxTicksLimit: 7
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                maxTicksLimit: 5,
+                padding: 10,
+                // Include a dollar sign in the ticks
+                callback: function(value, index, values) {
+                    return number_format(value);
+                },
+                suggestedMax: 20, // Set an appropriate maximum value
+                suggestedMin: 0,
+                // stepSize: 30,
+                },
+                gridLines: {
+                color: "rgb(234, 236, 244)",
+                zeroLineColor: "rgb(234, 236, 244)",
+                drawBorder: false,
+                borderDash: [2],
+                zeroLineBorderDash: [2]
+                }
+            }],
+            },
+            legend: {
+            display: false
+            },
+            tooltips: {
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            titleMarginBottom: 10,
+            titleFontColor: '#6e707e',
+            titleFontSize: 14,
+            borderColor: '#dddfeb',
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            intersect: false,
+            mode: 'index',
+            caretPadding: 10,
+            callbacks: {
+                label: function(tooltipItem, chart) {
+                var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+                return 'Dustbin : ' + number_format(tooltipItem.yLabel);
+                }
+            }
+            }
+        }
+        });
+    </script>
+
+ @endif
 
 </body>
 

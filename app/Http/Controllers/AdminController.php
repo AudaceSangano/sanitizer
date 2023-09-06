@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\AudaceEmail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Carbon;
 
 class AdminController extends Controller
 {
@@ -42,29 +45,42 @@ class AdminController extends Controller
         ]);
     }
 
-    public function getTank()
+    public function getTank($key)
     {
-        $result = DB::table('dust_status')->where('st_category', '0')->first();
+        $result = DB::table('dust_status')->where('st_id', $key)->first();
         $status = $result->st_status;
-
         return response()->json(['status' => $status]);
     }
 
-    public function getTankOne()
+    public function dryUpdate($status, $id)
     {
-        $result = DB::table('dust_status')->where('st_category', '1')->first();
-        $status = $result->st_status;
-
-        return response()->json(['status' => $status]);
-    }
-
-    public function dryUpdate($status)
-    {
-        $results = DB::table('dust_status')->where('st_category', '0')->update(
+        $results = DB::table('dust_status')->where('st_id', $id)->update(
             [
                 'st_status' => $status
             ]
         );
+
+        if ($status=='full') {
+            DB::table('report')->insert([
+                'rp_dust' => $id
+            ]);
+            $currentDateTime = Carbon::now();
+            $formattedDateTime = $currentDateTime->format('Y-m-d H:i:s');
+            $result = DB::table('dust_status')->where('st_id', $id)->first();
+            $data = [
+                'address' => $result->address,
+                'category' => $result->st_category==1?'Wet waste':'Dry waste',
+                'time' => $formattedDateTime,
+            ];
+
+            $email = new AudaceEmail($data);
+
+            $users = DB::table('users')->where('role_id', 2)->get();
+
+            foreach ($users as $user) {
+            Mail::to($user->email)->send($email);
+            }
+        }
 
         if ($results) {
             return response()->json(['status' => 'Successfull'], 200);
@@ -73,18 +89,55 @@ class AdminController extends Controller
         }
     }
 
-    public function wetUpdate($status)
+    public function dustRegister(Request $request)
     {
-        $results = DB::table('dust_status')->where('st_category', '1')->update(
-            [
-                'st_status' => $status
-            ]
-        );
+        $data = [
+            'address' => $request->location,
+            'st_category' => $request->type,
+        ];
 
-        if ($results) {
-            return response()->json(['status' => 'Successfull'], 200);
-        }else {
-            return response()->json(['status' => 'Fail'], 500);
-        }
+        DB::table('dust_status')->insert($data);
+
+        return back()->withErrors([
+            'user_error' => 'Successful Dustbin registered.',
+        ]);
+    }
+    public function dustUpdate(Request $request)
+    {
+        $data = [
+            'address' => $request->location,
+            'st_category' => $request->type,
+        ];
+
+        DB::table('dust_status')->where('st_id', $request->id)->update($data);
+
+        return back()->withErrors([
+            'user_error' => 'Successful Dustbin Updated.',
+        ]);
+    }
+    public function dustRemove($id)
+    {
+        DB::table('dust_status')->where('st_id', $id)->delete();
+
+        return back()->withErrors([
+            'user_error' => 'Successful Dustbin Deleted.',
+        ]);
+    }
+
+    public function dustUpdateForm($id) {
+        $data = DB::table('dust_status')->where('st_id', $id)->first();
+        return view('layout.dustupdate',compact('data'));
+    }
+
+    public function dustview($dust) {
+        $status = DB::table('dust_status')->where('st_id', $dust)->first()->st_status;
+        $id = $dust;
+        return view('layout.live',compact('status', 'id'));
+    }
+
+    public function report() {
+        $data = DB::table('dust_status')
+                ->get();
+        return view('layout.report', compact('data'));
     }
 }
