@@ -43,11 +43,13 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'name' => ['required'],
+            'telephone' => ['required'],
         ]);
 
         $data = [
             'name' => $request->name,
-            'email' => $request->email
+            'email' => $request->email,
+            'telephone' => $request->telephone,
         ];
         DB::table('users')->where('id', Auth::id())->update($data);
         return back()->withErrors([

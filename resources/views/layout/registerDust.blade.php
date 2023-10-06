@@ -10,7 +10,7 @@
             <!-- Card Header - Dropdown -->
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Dustbin Registration Form</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Sanitizer Registration Form</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -25,21 +25,25 @@
                                 <input type="text" class="form-control" name="location" placeholder="location" required>
                             </div>
                             <div class="col-6">
-                                <select class="form-control" name="type" required>
-                                    <option value="" selected>Select type</option>
-                                    <option value="1">Wet</option>
-                                    <option value="0">Dry</option>
-                                </select>
-                            </div>
-                            <div class="col-6 mt-3">
                                 @php
                                     $id = DB::table('dust_status')->get()->count();
                                 @endphp
-                                <input type="text" class="form-control" value="{{$id+1}} This is your Dustbin Id" readonly required>
+                                <input type="text" class="form-control" value="{{$id+1}} This is your Sanitizer Unique Id" readonly required>
+                            </div>
+                            <div class="col-6 mt-3">
+                                <select class="form-control" name="collector" required>
+                                    <option value="" selected hidden>Select Collector</option>
+                                    @php
+                                        $users = DB::table('users')->where('role_id', 2)->get();
+                                    @endphp
+                                    @foreach ($users as $user)
+                                    <option value="{{$user->id}}">{{$user->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">
-                            Register Dustbin
+                            Register Sanitizer
                         </button>
                     </form>
                 {{-- </div> --}}

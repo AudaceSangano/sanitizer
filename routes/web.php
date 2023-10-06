@@ -17,7 +17,7 @@ Route::post('/login/operation', [AuthController::class, 'authenticate'])->name('
 
 Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
-    Route::get('/main', function () {
+    Route::get('/Dashboard', function () {
         $currentDate = Carbon::now();
 
         $startDate = $currentDate->startOfWeek();
@@ -29,17 +29,17 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
 
             $formattedDate = $date->format('Y-m-d');
 
-            $dataForDays[$date->format('l')] = DB::table('dust_status')->whereDate('created_at', $formattedDate)->get()->count();
+            $dataForDays[$date->format('l')] = DB::table('report')->whereDate('created_at', $formattedDate)->get()->count();
         }
 
         if (Auth::user()->role_id=='1') {
             $data = [
                 'dustbin' => DB::table('dust_status')->get()->count(),
                 'wet' => DB::table('report')->join('dust_status', 'report.rp_dust', 'dust_status.st_id')
-                            ->where('st_category', '1')->get()->count(),
+                            ->whereDate('report.created_at', now()->format('Y-m-d'))->get()->count(),
                 'dry' => DB::table('report')->join('dust_status', 'report.rp_dust', 'dust_status.st_id')
-                            ->where('st_category', '0')->get()->count(),
-                'user' => DB::table('users')->where('role_id', 2)->get()->count(),
+                            ->whereMonth('report.created_at', Carbon::now()->month)->get()->count(),
+                'user' => DB::table('users')->where('role_id', '2')->get()->count(),
                 'days' => $dataForDays
             ];
         }else {

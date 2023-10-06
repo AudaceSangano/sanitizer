@@ -20,6 +20,7 @@ class AdminController extends Controller
             'fname' => ['required'],
             'lname' => ['required'],
             'password' => ['required', 'confirmed'],
+            'telephone' => ['required'],
         ]);
 
         $data = [
@@ -27,6 +28,7 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => 2,
+            'telephone' => $request->telephone,
         ];
 
         DB::table('users')->insert($data);
@@ -52,40 +54,56 @@ class AdminController extends Controller
         return response()->json(['status' => $status]);
     }
 
-    public function dryUpdate($status, $id)
+    public function dryUpdate(Request $request)
     {
+        $status = $request->status;
+        $id = $request->id;
         $results = DB::table('dust_status')->where('st_id', $id)->update(
             [
                 'st_status' => $status
             ]
         );
 
-        if ($status=='full') {
-            DB::table('report')->insert([
-                'rp_dust' => $id
-            ]);
-            $currentDateTime = Carbon::now();
-            $formattedDateTime = $currentDateTime->format('Y-m-d H:i:s');
-            $result = DB::table('dust_status')->where('st_id', $id)->first();
-            $data = [
-                'address' => $result->address,
-                'category' => $result->st_category==1?'Wet waste':'Dry waste',
-                'time' => $formattedDateTime,
-            ];
+        if ($status=='low') {
+            $transaction = DB::table('dust_status')->where('st_id', $id)->first();
+            $today = Carbon::now()->addHours(2);
 
-            $email = new AudaceEmail($data);
+            $startDate = Carbon::parse($transaction->created_at);
 
-            $users = DB::table('users')->where('role_id', 2)->get();
+            $current = Carbon::parse($today);
+            $db = Carbon::parse($startDate);
 
-            foreach ($users as $user) {
-            Mail::to($user->email)->send($email);
+            $numberOfDays = $current->diffInMinutes($db);
+            if ($numberOfDays>=2) {
+                $currentDateTime = Carbon::now();
+                $formattedDateTime = $currentDateTime->format('Y-m-d H:i:s');
+                $result = DB::table('dust_status')->where('st_id', $id)->first();
+                $data = [
+                    'address' => $result->address,
+                    'time' => $formattedDateTime,
+                ];
+
+                $email = new AudaceEmail($data);
+
+                $users = DB::table('dust_status')->join('users', 'users.id', 'dust_status.st_collector')->where('st_id', $id)->first();
+                Mail::to($users->email)->send($email);
             }
         }
-
         if ($results) {
-            return response()->json(['status' => 'Successfull'], 200);
+            return response()->json(['status' => 'Successfull Notify'], 200);
         }else {
-            return response()->json(['status' => 'Fail'], 500);
+            return response()->json(['status' => 'Fail to Notify'], 500);
+        }
+    }
+    public function infra($id)
+    {
+        $results = DB::table('report')->insert([
+                'rp_dust' => $id
+            ]);
+        if ($results) {
+            return response()->json(['status' => 'Successfull recorede'], 200);
+        }else {
+            return response()->json(['status' => 'Fail to record'], 500);
         }
     }
 
@@ -93,7 +111,7 @@ class AdminController extends Controller
     {
         $data = [
             'address' => $request->location,
-            'st_category' => $request->type,
+            'st_collector' => $request->collector,
         ];
 
         DB::table('dust_status')->insert($data);
@@ -102,11 +120,12 @@ class AdminController extends Controller
             'user_error' => 'Successful Dustbin registered.',
         ]);
     }
+
     public function dustUpdate(Request $request)
     {
         $data = [
             'address' => $request->location,
-            'st_category' => $request->type,
+            'st_collector' => $request->collector,
         ];
 
         DB::table('dust_status')->where('st_id', $request->id)->update($data);

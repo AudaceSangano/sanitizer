@@ -10,7 +10,7 @@
             <!-- Card Header - Dropdown -->
             <div
                 class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Collector Registration Form</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Filler Registration Form</h6>
             </div>
             <!-- Card Body -->
             <div class="card-body">
@@ -36,12 +36,21 @@
                                     @enderror
                             </div>
                         </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control form-control-user" name="email" id="exampleInputEmail"
-                                placeholder="Email Address">
-                                @error('email')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <input type="email" class="form-control form-control-user" name="email" id="exampleInputEmail"
+                                    placeholder="Email Address">
+                                    @error('email')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                            </div>
+                            <div class="col-sm-6">
+                                <input type="number" class="form-control form-control-user" name="telephone" id="exampleInputTelephone"
+                                    placeholder="Telephone number">
+                                    @error('telephone')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                            </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6 mb-3 mb-sm-0">
@@ -56,7 +65,7 @@
                                     id="exampleRepeatPassword" placeholder="Repeat Password">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                        <button type="submit" class="btn btn-warning btn-user btn-block">
                             Register Account
                         </button>
                     </form>
