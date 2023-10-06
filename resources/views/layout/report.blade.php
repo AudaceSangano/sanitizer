@@ -3,7 +3,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Collector Users List</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Sanitizer Report</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -14,19 +14,17 @@
                 <thead>
                     <tr>
                         <th>Address</th>
-                        <th>Last Full</th>
+                        <th>Last Low</th>
                         <th>Current Status</th>
-                        <th>Category</th>
-                        <th>Dustbin Id</th>
+                        <th>Sanitizer Id</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>Address</th>
-                        <th>Last Full</th>
+                        <th>Last Low</th>
                         <th>Current Status</th>
-                        <th>Category</th>
-                        <th>Dustbin Id</th>
+                        <th>Sanitizer Id</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -38,7 +36,6 @@
                         <td>{{$row->address}}</td>
                         <td>{{$report==null?'It new!':$report->created_at}}</td>
                         <td>{{$row->st_status}}</td>
-                        <td>{{$row->st_category=='1'?'Wet':'Dry'}}</td>
                         <td>{{$row->st_id}}</td>
                     </tr>
                     @endforeach

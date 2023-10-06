@@ -26,13 +26,17 @@
                                 <input type="hidden" class="form-control" name="id" value="{{$data->st_id}}" required>
                             </div>
                             <div class="col-6">
-                                <select class="form-control" name="type" required>
-                                    <option value="1" {{$data->st_category==1?'selected':''}}>Wet</option>
-                                    <option value="0" {{$data->st_category==0?'selected':''}}>Dry</option>
-                                </select>
+                                <input type="text" class="form-control" value="{{$data->st_id}} This is your Dustbin Id" readonly required>
                             </div>
                             <div class="col-6 mt-3">
-                                <input type="text" class="form-control" value="{{$data->st_id}} This is your Dustbin Id" readonly required>
+                                <select class="form-control" name="collector" required>
+                                    @php
+                                        $users = DB::table('users')->where('role_id', 2)->get();
+                                    @endphp
+                                    @foreach ($users as $user)
+                                    <option value="{{$user->id}}" {{$user->id==$data->st_collector?'selected':''}}>{{$user->name}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-warning">

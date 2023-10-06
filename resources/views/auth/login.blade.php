@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Smart Dustbin - Login</title>
+    <title>Smart Sinitizer - Login</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{ asset('assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -24,14 +24,14 @@
 
 <body class="bg-gradient-primary d-flex align-items-center">
 
-    <div class="container">
+    <div class="container justify-content-center">
 
         <!-- Outer Row -->
         <div class="row justify-content-center">
 
             <div class="col-xl-10 col-lg-12 col-md-9">
 
-                <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card o-hidden border-0 shadow-lg my-5 bg-warning">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
                         <div class="row">
@@ -44,7 +44,7 @@
                                     @error('error')
                                         <div class="alert alert-danger text-primary font-18 text-center">{{ $message }}</div>
                                     @enderror
-                                    <form class="user" action="{{ route('auth.login.op') }}" method="POST">
+                                    <form class="user m-5" action="{{ route('auth.login.op') }}" method="POST">
                                         @csrf
                                         <div class="form-group">
                                             <input type="email" class="form-control form-control-user"
@@ -61,21 +61,14 @@
                                                     <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
-                                            </div>
-                                        </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
                                     </form>
-                                    <hr>
-                                    <div class="text-center">
+                                    {{-- <hr>
+                                        <div class="text-center">
                                         <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>

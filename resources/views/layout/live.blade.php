@@ -18,7 +18,7 @@
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
             <div class="card-header bg-warning py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Live Waste Status {{$id}} Dustbin</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Live Container Status of {{$id}}</h6>
                 <input type="hidden" value="{{$id}}" class="id">
             </div>
             <!-- Card Body -->

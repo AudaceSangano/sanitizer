@@ -3,7 +3,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Collector Users List</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Filler Users List</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -39,7 +39,7 @@
                     <tr>
                         <td>{{$row->name}}</td>
                         <td>{{$row->email}}</td>
-                        <td>{{$row->role_id==2?'Collector':'Administrator'}}</td>
+                        <td>{{$row->role_id==2?'Handler':'Administrator'}}</td>
 
                         @if (Auth::user()->role_id=='1')
                         <td class="text-center">

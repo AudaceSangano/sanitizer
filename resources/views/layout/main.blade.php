@@ -17,7 +17,7 @@ $routeName = $route->getName();
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Smart Dustbin - Admin</title>
+    <title>Smart Sinitizer - Admin</title>
 
     <!-- Custom fonts for this template-->
     <link href="{{asset('/assets/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -36,14 +36,14 @@ $routeName = $route->getName();
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-warning sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route("dashboard")}}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <img src="{{asset('assets/img/logo.png')}}" alt="" width="60">
                 </div>
-                <div class="sidebar-brand-text mx-3">Dustbin</div>
+                <div class="sidebar-brand-text mx-3">SANITIZER</div>
             </a>
 
             <!-- Divider -->
@@ -51,7 +51,7 @@ $routeName = $route->getName();
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="/main">
+                <a class="nav-link" href="{{ route("dashboard")}}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -74,9 +74,9 @@ $routeName = $route->getName();
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         @if (Auth::user()->role_id=='1')
-                        <a class="collapse-item" href="/register/user">New Collector</a>
+                        <a class="collapse-item" href="/register/user">New Filler</a>
                         @endif
-                        <a class="collapse-item" href="/list/user">Collectors List</a>
+                        <a class="collapse-item" href="/list/user">Fillers List</a>
                     </div>
                 </div>
             </li>
@@ -89,14 +89,14 @@ $routeName = $route->getName();
                         <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5Zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6Z"/>
                         <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1ZM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118ZM2.5 3h11V2h-11v1Z"/>
                       </svg>
-                    <span>Dustbin Management</span>
+                    <span>Sanitizer Management</span>
                 </a>
                 <div id="collapseTwo1" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         @if (Auth::user()->role_id=='1')
-                        <a class="collapse-item" href="{{route('new.dust')}}">New Dustbin</a>
+                        <a class="collapse-item" href="{{route('new.dust')}}">New Sanitizer</a>
                         @endif
-                        <a class="collapse-item" href="/dustbin/list">Dustinbin List</a>
+                        <a class="collapse-item" href="/dustbin/list">Sanitizer List</a>
                     </div>
                 </div>
             </li>
@@ -113,7 +113,7 @@ $routeName = $route->getName();
             <li class="nav-item">
                 <a class="nav-link" href="{{route('dust.report')}}">
                     <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Dustbin Report</span></a>
+                    <span>Sanitizer Report</span></a>
             </li>
 
             <!-- Divider -->
@@ -362,7 +362,7 @@ $routeName = $route->getName();
             callbacks: {
                 label: function(tooltipItem, chart) {
                 var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-                return 'Dustbin : ' + number_format(tooltipItem.yLabel);
+                return 'Users : ' + number_format(tooltipItem.yLabel);
                 }
             }
             }

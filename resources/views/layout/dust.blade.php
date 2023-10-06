@@ -3,7 +3,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Collector Users List</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Sanitizer Lists</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -14,18 +14,16 @@
                 <thead>
                     <tr>
                         <th>ADDRESS</th>
-                        <th>Dustbin ID</th>
+                        <th>Sanitizer ID</th>
                         <th>Current Status</th>
-                        <th>Category</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>ADDRESS</th>
-                        <th>Dustbin ID</th>
+                        <th>Sanitizer ID</th>
                         <th>Current Status</th>
-                        <th>Category</th>
                         <th class="text-center">Action</th>
                     </tr>
                 </tfoot>
@@ -38,7 +36,6 @@
                         <td>{{$row->address}}</td>
                         <td>{{$row->st_id}}</td>
                         <td>{{$row->st_status}}</td>
-                        <td>{{$row->st_category==1?'Wet':'Dry'}}</td>
                         <td class="text-center">
                             @if (Auth::user()->role_id=='1')
                             <a href="{{route('dust.delete',$row->st_id)}}" class="text-danger" onclick="return confirm('Are you sure!')"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">

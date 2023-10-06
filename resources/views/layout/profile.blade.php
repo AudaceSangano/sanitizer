@@ -27,13 +27,27 @@
                     @endphp
                     <form class="user" action="{{ route('personal.change') }}" method="POST">
                         @csrf
-                        <div class="form-group">
-                            <input type="email" class="form-control form-control-user text-center"
-                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                name="email" value="{{$user->email}}">
-                                @error('email')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="email" class="form-control form-control-user text-center"
+                                        id="exampleInputEmail" aria-describedby="emailHelp"
+                                        name="email" value="{{$user->email}}">
+                                        @error('email')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <input type="number" class="form-control form-control-user text-center"
+                                        id="exampleInputEmail" aria-describedby="emailHelp"
+                                        name="telephone" value="{{$user->telephone}}">
+                                        @error('telephone')
+                                            <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control form-control-user text-center"
@@ -71,7 +85,7 @@
                     <form class="user" action="{{ route('security.change') }}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <input type="text" class="form-control form-control-user text-center"
+                            <input type="password" class="form-control form-control-user text-center"
                                 id="exampleInputEmail" aria-describedby="emailHelp"
                                 name="old_password" placeholder="Old Password">
                                 @error('old_password')
